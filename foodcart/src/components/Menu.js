@@ -2,23 +2,40 @@ import React from 'react'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import SpecialDishes from './SpecialDishes'
+import Hero from './Hero'
+import Filteredmenu from './Filteredmenu'
 
 function Menu() {
 
 
     const [menu, Setmenu] = useState([])
 
+    const [filteredMenus, setFilteredMenus] = useState([])
+
+    const [loading, setLoading] = useState(true)
+
+
     async function ApiCall() {
         const Api_url = "https://www.themealdb.com/api/json/v1/1/search.php?f=c"
-        
+
         const response = await fetch(Api_url)
         const data = await response.json()
 
         Setmenu(data.meals)
+        setLoading(false)
+
 
 
     }
-    console.log("data are",menu);
+    async function FilteredItems() {
+
+        const Api_url = "https://www.themealdb.com/api/json/v1/1/categories.php"
+
+        const response = await fetch(Api_url)
+        const NameOfItems = await response.json()
+        setFilteredMenus(NameOfItems.categories)
+        setLoading(false)
+    }
 
     // let ShowImages = menu.map((item) => {
     //     return (
@@ -35,6 +52,7 @@ function Menu() {
 
     const FoodApi = useEffect(() => {
         ApiCall()
+        FilteredItems()
 
     }, [])
 
@@ -43,9 +61,25 @@ function Menu() {
 
     return (
         <div>
-          <SpecialDishes
-          SpecialDishes={menu}
-          />
+            <Hero />
+            <div>
+                {!loading ? <SpecialDishes
+                    SpecialDishes={menu}
+                /> : <h1>loading</h1>}
+            </div>
+
+            <div>
+                {!loading ? (<Filteredmenu
+
+                    FilteredFood={filteredMenus} AllDishes={menu}
+
+                />) : null}
+            </div>
+
+
+
+
+
 
         </div>)
 }
