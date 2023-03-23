@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 
 function Filteredmenu(props) {
-    console.log("props are ", props.AllDishes);
     let [allmenu, setAllmenu] = useState(props.AllDishes)
     let [fullonmenu, setFullonmenu] = useState([])
 
@@ -26,18 +25,24 @@ function Filteredmenu(props) {
 
             )
         })
-        
+
 
         setFullonmenu(FullOn)
 
 
-
-
-
-
-
-
     }
+
+   let beefy= props.BeefItems.map((item)=>{
+        return(
+            <div>
+                <li>
+                    <img src={item.strMealThumb} alt="" />
+                    <h1>{item.strMeal}</h1>
+                    
+                </li>
+            </div>
+        )
+    })
 
 
 
@@ -55,6 +60,7 @@ function Filteredmenu(props) {
             </div>
         )
     })
+
     return (
         <div>
             <div>
@@ -64,8 +70,9 @@ function Filteredmenu(props) {
             </div>
 
             <div>
+                <div>{beefy}</div>
                 <ul>
-                    {fullonmenu}
+                    {fullonmenu.length!=0?fullonmenu:<h1>sorry</h1>}
 
                 </ul>
             </div>

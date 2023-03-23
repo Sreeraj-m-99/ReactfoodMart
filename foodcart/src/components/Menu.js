@@ -5,17 +5,22 @@ import SpecialDishes from './SpecialDishes'
 import Hero from './Hero'
 import Filteredmenu from './Filteredmenu'
 
+
 function Menu() {
 
 
     const [menu, Setmenu] = useState([])
-
     const [filteredMenus, setFilteredMenus] = useState([])
+    const [loading,setLoading]=useState(false)
+    const [oneDish,setOneDish]=useState([])
 
-    const [loading, setLoading] = useState(true)
+
+    
 
 
     async function ApiCall() {
+        setLoading(true)
+        
         const Api_url = "https://www.themealdb.com/api/json/v1/1/search.php?f=c"
 
         const response = await fetch(Api_url)
@@ -23,11 +28,14 @@ function Menu() {
 
         Setmenu(data.meals)
         setLoading(false)
+        
 
 
 
     }
     async function FilteredItems() {
+        
+        setLoading(true)
 
         const Api_url = "https://www.themealdb.com/api/json/v1/1/categories.php"
 
@@ -35,28 +43,36 @@ function Menu() {
         const NameOfItems = await response.json()
         setFilteredMenus(NameOfItems.categories)
         setLoading(false)
+    
     }
 
-    // let ShowImages = menu.map((item) => {
-    //     return (
-    //         <div>
-    //             < img src={item.strMealThumb} alt="" />
-    //             <h1>{item.strCategory}</h1>
 
-    //         </div>
-    //     )
-    // })
-    // console.log("menu items are", menu);
+    async function SingleDishItem() {
+         
+        const Api_url = "https://www.themealdb.com/api/json/v1/1/filter.php?c=Beef"
+
+        const response = await fetch(Api_url)
+        const beef = await response.json()
+        setOneDish(beef.meals)
+       
+        
+    }
+  
+
+  
+   
 
 
 
     const FoodApi = useEffect(() => {
         ApiCall()
         FilteredItems()
+        SingleDishItem()
+      
 
     }, [])
 
-
+console.log("beeeeef",oneDish);
 
 
     return (
@@ -71,9 +87,13 @@ function Menu() {
             <div>
                 {!loading ? (<Filteredmenu
 
-                    FilteredFood={filteredMenus} AllDishes={menu}
+                    FilteredFood={filteredMenus} 
+                    AllDishes={menu}
+                    BeefItems={oneDish}
+                   
+                    
 
-                />) : null}
+                />) : <h1>loading</h1>}
             </div>
 
 
